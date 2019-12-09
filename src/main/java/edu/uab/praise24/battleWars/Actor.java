@@ -27,4 +27,5 @@ public interface Actor {
     public int[] getPosition();
     public boolean isDestroyed();
     public void destroy();
+    public boolean isSpawning();
 }

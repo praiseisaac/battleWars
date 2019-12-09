@@ -18,9 +18,11 @@ import java.awt.MouseInfo;
 import java.awt.Point;
 import static java.lang.Math.*;
 import java.util.Random;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.Glow;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 
 /**
  *
@@ -52,13 +54,20 @@ public class Player implements Actor {
     String direction;
     int count = 0;
     Gun gun = new Gun("Main Player");
+    int score = 0;
     String name;
     Glow glow;
     boolean isDestroyed = false, spawning = false;
     
+    
 
     public static Player getInstance() {
         return PlayerHolder.INSTANCE;
+    }
+
+    @Override
+    public boolean isSpawning() {
+        return spawning;
     }
 
     private static class PlayerHolder {
@@ -68,11 +77,16 @@ public class Player implements Actor {
 
     private Player() {
         name = "Main Player";
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        tHeight = 50;
+        tHeight = primaryScreenBounds.getHeight() * tHeight / 1080;
+        velocity = primaryScreenBounds.getHeight() * velocity / 1080;
     }
 
     @Override
     public void destroy() {
         System.out.println("============Player Hit===========");
+        isDestroyed = true;
     }
 
     @Override
@@ -97,6 +111,7 @@ public class Player implements Actor {
                 //x1 = (x1 * frame.getBounds().width) / App.oldWidth;
                 //y1 = (y1 * frame.getBounds().width) / App.oldWidth;
             }*/
+        //System.out.println(xc + " + " + yc + "::::" + x1 + " + " + y1);
         if (monitorMouse() == true || xo != xo2) {
             aim();
 
@@ -131,12 +146,10 @@ public class Player implements Actor {
             if (moveA == true) {
                 moveLeft(velocity*(cos(toRadians(45))));
                 direction = "left";
-                System.out.println("onwaard =>>>>>>>>>>>>>>>>>>>>>>  FL");
             }
             if (moveD == true) {
                 direction = "right";
                 moveRight(velocity*(cos(toRadians(45))));
-                System.out.println("onwaard =>>>>>>>>>>>>>>>>>>>>>>  FR");
             }
             //System.out.println(moving + " ==> " + direction);
         }
@@ -150,7 +163,6 @@ public class Player implements Actor {
                 moveBackward(velocity*(sin(toRadians(45))));
                 moveRight(velocity*(cos(toRadians(45))));
                 direction = "BR";
-                System.out.println("onwaard =>>>>>>>>>>>>>>>>>>>>>>  BR");
             } else {
                 direction = "backward";
                 moveBackward(velocity);
@@ -160,12 +172,10 @@ public class Player implements Actor {
             if (moveA == true) {
                 direction = "left";
                 moveLeft(velocity);
-                System.out.println("onwaard =>>>>>>>>>>>>>>>>>>>>>>  FL");
             }
             if (moveD == true) {
                 direction = "right";
                 moveRight(velocity);
-                System.out.println("onwaard =>>>>>>>>>>>>>>>>>>>>>>  FR");
             }
             //System.out.println(moving + " ==> " + direction);
         }
@@ -232,6 +242,7 @@ public class Player implements Actor {
         g = gc;
         glow = new Glow();
         glow.setLevel(40);
+        isDestroyed = false;
         //x1 = App.getWidth() / 2;
         //y1 = App.getHeight() / 2;
         R = 50 / sin(toRadians(60));
@@ -397,79 +408,56 @@ public class Player implements Actor {
     }
 
     public void moveRight(double dx) {
-        if (y1 <= App.getHeight() && y1 >= 0 && x1 >= 0 && x1 <= App.getWidth()) {
-            System.out.println("moving => 1");
+        if (x1 <= App.getWidth()-tHeight/2) {
+            //System.out.println("moving => 1");
             if (sqrt(pow(yc - y1, 2) + pow(xc - x1, 2)) > 10) {
-                System.out.println("moving");
+                //System.out.println("moving");
                 x1 = x1 + dx;
             }
-        } else if (y1 >= App.getHeight()) {
-            y1 = App.getHeight();
-        } else if (y1 <= 0) {
-            y1 = 0;
-        } else if (x1 >= App.getWidth()) {
-            x1 = App.getWidth();
-        } else if (x1 <= 0) {
-            x1 = 0;
-        }
+        } else if (x1 >= App.getWidth()-tHeight/2) {
+            x1 = App.getWidth()-tHeight/2;
+        } 
     }
 
-    public boolean spawning(){
-        return spawning;
-    }
     
     public void moveLeft(double dx) {
-        if (y1 <= App.getHeight() && y1 >= 0 && x1 >= 0 && x1 <= App.getWidth()) {
-            System.out.println("moving => 1");
+        if (x1 >= tHeight/2) {
+            //System.out.println("moving => 1");
             if (sqrt(pow(yc - y1, 2) + pow(xc - x1, 2)) > 10) {
-                System.out.println("moving");
+                //System.out.println("moving");
                 x1 = x1 - dx;
             }
-        } else if (y1 >= App.getHeight() - 30) {
-            y1 = App.getHeight();
-        } else if (y1 <= 0) {
-            y1 = 0;
-        } else if (x1 >= App.getWidth()) {
-            x1 = App.getWidth();
-        } else if (x1 <= 0) {
-            x1 = 0;
+        }else if (x1 <= tHeight/2) {
+            x1 = tHeight/2;
         }
+    }
+    
+    public void hit(){
+        
     }
 
     public void moveForward(double dy) {
-        if (y1 <= App.getHeight() && y1 >= 0 && x1 >= 0 && x1 <= App.getWidth()) {
-            System.out.println("moving => 1");
+        if (y1 >= tHeight/2) {
+            //System.out.println("moving => 1");
             if (sqrt(pow(yc - y1, 2) + pow(xc - x1, 2)) > 10) {
-                System.out.println("moving");
+                //System.out.println("moving");
                 y1 = y1 - dy;
             }
-        } else if (y1 >= App.getHeight()) {
-            y1 = App.getHeight();
-        } else if (y1 <= 0) {
-            y1 = 0;
-        } else if (x1 >= App.getWidth()) {
-            x1 = App.getWidth();
-        } else if (x1 <= 0) {
-            x1 = 0;
-        }
+        } else if (y1 < tHeight/2) {
+            y1 = tHeight/2;
+        } 
     }
 
     public void moveBackward(double dy) {
-        if (y1 <= App.getHeight() && y1 >= 0 && x1 >= 0 && x1 <= App.getWidth()) {
-            System.out.println("moving => 1");
+        if (y1 <= App.getHeight()-tHeight/2) {
+            //System.out.println("moving => 1");
             if (sqrt(pow(yc - y1, 2) + pow(xc - x1, 2)) > 10) {
-                System.out.println("moving");
+                //System.out.println("moving");
                 y1 = y1 + dy;
             }
-        } else if (y1 >= App.getHeight()) {
-            y1 = App.getHeight();
-        } else if (y1 <= 0) {
-            y1 = 0;
-        } else if (x1 >= App.getWidth()) {
-            x1 = App.getWidth();
-        } else if (x1 <= 0) {
-            x1 = 0;
-        }
+        } else if (y1 > App.getHeight()-tHeight/2) {
+            y1 = App.getHeight()-tHeight/2;
+        } 
     }
 
     // ====================NEEDS REVISION FOR JFX
@@ -498,6 +486,24 @@ public class Player implements Actor {
         return moving;
     }
 
+    public void addScore(){
+        score++;
+    }
+    
+    public int getScore(){
+        return score;
+    }
+    
+    public void reset(){
+        score = 0;
+        velocity = 0;
+        moveA = false;
+        moveW = false;
+        moveD = false;
+        moveS = false;
+        gun.reset();
+    }
+    
     public boolean isCollided() {
 
         for (Missile msl : gun.getMissiles()) {
@@ -528,9 +534,9 @@ public class Player implements Actor {
 
     public void launchMissile() {
         //if (missileCount < 1){
-        System.out.println("launched");
+        
         aim();
-        gun.shoot(xc, yc, x1, y1, theta);
+        gun.shoot(x1, y1, xo, yo, theta, g);
     }
 
     public Gun getGun() {
@@ -540,7 +546,7 @@ public class Player implements Actor {
     public void idle() {
 
         if (abs((int) x1 - (int) xc) >= 5 && abs((int) y1 - (int) yc) >= 5) {
-            velocity = 3;
+            velocity = vMax;
             moving = true;
             spawning = true;
             aim();
@@ -596,10 +602,10 @@ public class Player implements Actor {
                 ym = (ym - dy);
                 xm = (xm - dx);
             }
-            System.out.println("idle " + (int) x1 + "," + (int) y1 + " == " + xc + "," + yc);
         } else {
             spawning = false;
             moving = false;
+            
         }
     }
 
