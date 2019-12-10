@@ -18,7 +18,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 
 /**
- *
+ * This class is used to create a player object 
+ * implements actor
+ * 
  * @author Praise Daramola praise24@uab.edu
  */
 public class Player implements Actor {
@@ -50,12 +52,20 @@ public class Player implements Actor {
     Glow glow;
     boolean isDestroyed = false, spawning = false;
     
-    
-
+    /**
+     * creates an instance of the player
+     * 
+     * @return
+     */
     public static Player getInstance() {
         return PlayerHolder.INSTANCE;
     }
 
+    /**
+     * used to check if the enemy is spawning
+     * 
+     * @return boolean
+     */
     @Override
     public boolean isSpawning() {
         return spawning;
@@ -74,16 +84,29 @@ public class Player implements Actor {
         velocity = primaryScreenBounds.getHeight() * velocity / 1080;
     }
     
+    /**
+     * used to get the height of the actor
+     * 
+     * @return height
+     */
     @Override
     public double getHeight(){
         return tHeight;
     }
 
+    /**
+     * used to destroy the actor
+     */
     @Override
     public void destroy() {
         isDestroyed = true;
     }
 
+    /**
+     * used to get the name of the actor
+     * 
+     * @return name
+     */
     @Override
     public String getName() {
         return name;
@@ -94,34 +117,14 @@ public class Player implements Actor {
         return name;
     }
 
+    /**
+     * used to update the actor
+     */
     @Override
     public void update() {
-        //missile.update();
-
-        /*if (!BattleWars.isWidthChanged()) {
-                tHeight = frame.getBounds().height / 12;
-                vMax = frame.getBounds().height / 120;
-                //aim();
-                //System.out.println(x1 + "," + y1);
-                //x1 = (x1 * frame.getBounds().width) / BattleWars.oldWidth;
-                //y1 = (y1 * frame.getBounds().width) / BattleWars.oldWidth;
-            }*/
-        //System.out.println(xc + " + " + yc + "::::" + x1 + " + " + y1);
         if (monitorMouse() == true || xo != xo2) {
             aim();
-
-            //System.out.println("===============aiming===============");
-        } else {
-
-            //System.out.println("===============idle===============");
-        }
-
-        /*if (EventListener.getKeys()[0].equals("W") && moveW != true) {
-            System.out.println("onwaard =>>>>>>>>>>>>>>>>>>>>>>");
-        }
-        if (EventListener.getKeys()[1].equals("S") && moveS != true) {
-            moveBackward();
-        }*/
+        } 
         if (moveW == true) {
             
             if (moveA == true) {
@@ -146,7 +149,6 @@ public class Player implements Actor {
                 direction = "right";
                 moveRight(velocity*(cos(toRadians(45))));
             }
-            //System.out.println(moving + " ==> " + direction);
         }
         if (moveS == true) {
             
@@ -162,7 +164,6 @@ public class Player implements Actor {
                 direction = "backward";
                 moveBackward(velocity);
             }
-            //System.out.println(moving + " ==> " + direction);
         } else {
             if (moveA == true) {
                 direction = "left";
@@ -172,12 +173,10 @@ public class Player implements Actor {
                 direction = "right";
                 moveRight(velocity);
             }
-            //System.out.println(moving + " ==> " + direction);
         }
 
         if (moving && velocity < vMax) {
             velocity = velocity + 0.1;
-            //System.out.println(this.direction);
         } else if (!moveW && velocity > 0 && direction.equals("forward")) {
             moveForward(velocity);
             velocity = velocity - 0.1;
@@ -209,6 +208,10 @@ public class Player implements Actor {
         }
     }
 
+    /**
+     * used to monitor whether the mouse is moving
+     * @return
+     */
     public boolean monitorMouse() {
 
         Point p2 = MouseInfo.getPointerInfo().getLocation();
@@ -223,16 +226,32 @@ public class Player implements Actor {
         }
     }
 
+    /**
+     * used to get the position of the actor
+     * 
+     * @return int[]
+     */
     @Override
     public int[] getPosition() {
         return new int[]{(int) x1, (int) y1, (int) xc, (int) yc, (int) xn, (int) yn, (int) xm, (int) ym};
     }
 
+    /**
+     * used to update the cursor position
+     * 
+     * @param xc
+     * @param yc
+     */
     public void updateCursor(int xc, int yc) {
         this.xc = xc;
         this.yc = yc;
     }
 
+    /**
+     * used to spawn the player 
+     * 
+     * @param gc
+     */
     public void spawn(GraphicsContext gc) {
         g = gc;
         glow = new Glow();
@@ -310,14 +329,11 @@ public class Player implements Actor {
         System.out.println("player Spawned");
     }
 
+    /**
+     * used to aim using the mouse
+     */
     public void aim() {
-        //Point p = MouseInfo.getPointerInfo().getLocation();
-        //xc = p.x;// - frame.getLocationOnScreen().x;
-        //yc = (p.y);// - 30 - frame.getLocationOnScreen().y);
-
         k = (int) (tHeight * tan(toRadians(30)));
-        //if (yc > 0 && xc > 0) {
-        //System.out.println(xn + "," + yn + " <==> " + yc + "," + xc);
         if (xc > x1 && yc < y1) {
             theta = toDegrees(atan((double) abs((yc - y1) / (xc - x1))));
             phi = 180 - 90 - theta;
@@ -329,7 +345,6 @@ public class Player implements Actor {
             yn = (yo - k * sin(toRadians(phi)));
             xm = (xo + k * cos(toRadians(phi)));
             ym = (yo + k * sin(toRadians(phi)));
-            //System.out.println(xn + "," + yn);
         }
         if (xc > x1 && yc > y1) {
             theta = toDegrees(atan((double) abs((xc - x1) / (yc - y1))));
@@ -342,7 +357,6 @@ public class Player implements Actor {
             yn = (yo - k * cos(toRadians(phi)));
             xm = (xo - k * sin(toRadians(phi)));
             ym = (yo + k * cos(toRadians(phi)));
-            //System.out.println(xn + "," + yn + " == " + yc + "," + xc);
         }
         if (xc < x1 && yc > y1) {
             theta = toDegrees(atan((double) abs((yc - y1) / (xc - x1))));
@@ -355,7 +369,6 @@ public class Player implements Actor {
             yn = (yo + k * sin(toRadians(phi)));
             xm = (xo - k * cos(toRadians(phi)));
             ym = (yo - k * sin(toRadians(phi)));
-            //System.out.println(xn + "," + yn + " == " + yc + "," + xc);
         }
         if (xc < x1 && yc < y1) {
             theta = toDegrees(atan((double) abs((xc - x1) / (yc - y1))));
@@ -368,7 +381,6 @@ public class Player implements Actor {
             yn = (yo + k * cos(toRadians(phi)));
             xm = (xo + k * sin(toRadians(phi)));
             ym = (yo - k * cos(toRadians(phi)));
-            //System.out.println(xn + "," + yn + " == " + yc + "," + xc);
         }
         if ((yc - y1 > 0) && (int) xc - x1 == 0) {
             theta = toDegrees(atan((double) abs((yc - y1) / (xc - x1))));
@@ -382,12 +394,14 @@ public class Player implements Actor {
             xm = (xo - k * cos(toRadians(phi)));
             ym = yo;
         }
-        //System.out.println(xn + "," + yn + " == " + ym + "," + xm);
-        //System.out.println(xo + "," + yo);
-        //System.out.println("Theta = " + theta);
-        //}
     }
 
+    /**
+     * used to determine the direction in which the actor is moving
+     * 
+     * @param value
+     * @param direction
+     */
     public void moving(boolean value, String direction) {
         this.moving = value;
         this.direction = direction;
@@ -402,6 +416,11 @@ public class Player implements Actor {
         }
     }
 
+    /**
+     * used to move the player right
+     * 
+     * @param dx
+     */
     public void moveRight(double dx) {
         if (x1 <= BattleWars.getWidth()-tHeight/2) {
             //System.out.println("moving => 1");
@@ -414,7 +433,11 @@ public class Player implements Actor {
         } 
     }
 
-    
+    /**
+     * used to move the player left
+     * 
+     * @param dx
+     */
     public void moveLeft(double dx) {
         if (x1 >= tHeight/2) {
             //System.out.println("moving => 1");
@@ -427,10 +450,12 @@ public class Player implements Actor {
         }
     }
     
-    public void hit(){
-        
-    }
 
+    /**
+     * used to move the player up
+     * 
+     * @param dy
+     */
     public void moveForward(double dy) {
         if (y1 >= tHeight/2) {
             //System.out.println("moving => 1");
@@ -443,11 +468,14 @@ public class Player implements Actor {
         } 
     }
 
+    /**
+     * used to move the player down
+     * 
+     * @param dy
+     */
     public void moveBackward(double dy) {
         if (y1 <= BattleWars.getHeight()-tHeight/2) {
-            //System.out.println("moving => 1");
             if (sqrt(pow(yc - y1, 2) + pow(xc - x1, 2)) > 10) {
-                //System.out.println("moving");
                 y1 = y1 + dy;
             }
         } else if (y1 > BattleWars.getHeight()-tHeight/2) {
@@ -455,40 +483,49 @@ public class Player implements Actor {
         } 
     }
 
-    // ====================NEEDS REVISION FOR JFX
+    /**
+     * used to render the actor
+     * 
+     * @param gc
+     */
     @Override
     public void paintComponent(GraphicsContext gc) {
-        //super.paintComponent(g);
-        //GraphicsContext g2d = g;
-
-        if (isCollided()) {
-            //isDestroyed = true;
-        }
-        //System.out.println("painting");
         gc.setFill(Color.RED);
         gc.setEffect(glow);
         gc.fillPolygon(new double[]{xn, x1, xm}, new double[]{yn, y1, ym}, 3);
         if (!BattleWars.isPaused()){
             gun.shoot(gc);
         }
-        
-        //System.out.println(xn + "," + x1 + "," + xm
-        //+ "," + yn + "," + y1 + "," + ym + " ==== " + xc + "," + yc);
-        //missile.repaint();
     }
 
+    /**
+     * used to determine if the actor is moving
+     * 
+     * @return boolean
+     */
     public boolean isMoving() {
         return moving;
     }
 
+    /**
+     * used to update the pa=layer score
+     */
     public void addScore(){
         score++;
     }
     
+    /**
+     * used to get the player score
+     * 
+     * @return int
+     */
     public int getScore(){
         return score;
     }
     
+    /**
+     * used to reset the player
+     */
     public void reset(){
         score = 0;
         velocity = 0;
@@ -499,6 +536,10 @@ public class Player implements Actor {
         gun.reset();
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean isCollided() {
 
         for (Missile msl : gun.getMissiles()) {
@@ -522,11 +563,18 @@ public class Player implements Actor {
         return false;
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public boolean isDestroyed() {
         return isDestroyed;
     }
 
+    /**
+     *
+     */
     public void launchMissile() {
         //if (missileCount < 1){
         
@@ -534,10 +582,17 @@ public class Player implements Actor {
         gun.shoot(x1, y1, xo, yo, theta, g);
     }
 
+    /**
+     *
+     * @return
+     */
     public Gun getGun() {
         return gun;
     }
 
+    /**
+     *
+     */
     public void idle() {
 
         if (abs((int) x1 - (int) xc) >= 5 && abs((int) y1 - (int) yc) >= 5) {

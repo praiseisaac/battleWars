@@ -99,7 +99,10 @@ public class BattleWars extends Application {
             arrowSize = 100, arrowDist = 150;
     Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
     
-
+    /**
+     * starts the game
+     * @param stage
+     */
     @Override
     public void start(Stage stage) {
         if (start) {
@@ -109,6 +112,9 @@ public class BattleWars extends Application {
         }
     }
 
+    /**
+     * used to setup the game/render parameters
+     */
     public void setup() {
         
 
@@ -198,6 +204,9 @@ public class BattleWars extends Application {
 
     }
 
+    /**
+     * main game 
+     */
     public void Play() {
         MainMenu.pause();
         pauseMenu.pause();
@@ -307,6 +316,9 @@ public class BattleWars extends Application {
         stage.show();
     }
 
+    /**
+     * main menu for the game
+     */
     public void MainMenu() {
         play.pause();
         pauseMenu.pause();
@@ -358,7 +370,7 @@ public class BattleWars extends Application {
                 boardNames.setEffect(new Glow(2));
                 leaderboard.setHalignment(boardNames, HPos.LEFT);
                 leaderboard.add(boardNames, 0, j + 1);
-                boardNames.setMinWidth(100);
+                boardNames.setMinWidth(100 * primaryScreenBounds.getHeight() / 1080);
                 boardScores.setEffect(new Glow(2));
                 leaderboard.setHalignment(boardScores, HPos.LEFT);
                 leaderboard.add(boardScores, 1, j + 1);
@@ -374,7 +386,7 @@ public class BattleWars extends Application {
                 boardScores.setScaleY(1.5 * primaryScreenBounds.getHeight() / 1080);
 
                 boardNames.setEffect(new Glow(2));
-                boardNames.setMinWidth(100);
+                boardNames.setMinWidth(100 * primaryScreenBounds.getHeight() / 1080);
                 leaderboard.setHalignment(boardNames, HPos.LEFT);
                 leaderboard.add(boardNames, 0, j + 1);
                 boardScores.setEffect(new Glow(2));
@@ -467,52 +479,9 @@ public class BattleWars extends Application {
         stage.show();
     }
 
-    public static void setScore(String player, int Score) {
-        for (int i = 1; i < players.size(); i++) {
-            if (players.size() > 1) {
-                if (players.get(i)[0].equals(player)) {
-                    if (Integer.valueOf(players.get(i)[1]) < Score) {
-                        players.get(i)[1] = String.valueOf(Score);
-                    }
-                }
-            }
-        }
-    }
-
-    public ArrayList<String[]> sortPlayers() {
-        ArrayList<String[]> plyers = players;
-        String[] temp = new String[2];
-        boolean sorting = true;
-        if (players.size() > 1) {
-            while (sorting) {
-                for (int i = 0; i < plyers.size() - 1; i++) {
-                    sorting = false;
-                    try {
-                        if (Integer.valueOf(plyers.get(i)[1]) < Integer.valueOf(plyers.get(i + 1)[1])) {
-                            temp = plyers.get(i);
-                            plyers.set(i, plyers.get(i + 1));
-                            plyers.set(i + 1, temp);
-                            sorting = true;
-                            break;
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-
-                    }
-                }
-            }
-        }
-        return plyers;
-    }
-
-    public boolean playerExists(String name) {
-        for (String[] plyer : players) {
-            if (plyer[0].equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * pause menu for the game
+     */
     public void PauseMenu() {
         play.pause();
         canvas = new Canvas(width, height);
@@ -578,23 +547,10 @@ public class BattleWars extends Application {
         stage.setResizable(false);
         stage.show();
     }
-
-    public static void pause() {
-        paused = true;
-    }
-
-    public static void resume() {
-        paused = false;
-    }
-
-    public static boolean isPaused() {
-        return paused;
-    }
-
-    public void killedMenu() {
-
-    }
-
+    
+    /**
+     * leader board menu
+     */
     public void LeaderBoard() {
         play.pause();
         MainMenu.pause();
@@ -622,8 +578,8 @@ public class BattleWars extends Application {
         leaderBoardLabel.setScaleY(3);
         leaderBoardLabel.setTextFill(Color.WHITE);
         leaderboard.add(leaderBoardLabel, 0, 0, 2, 1);
-        leaderboard.setHgap(leaderboardHgap + 90);
-        leaderboard.setVgap(leaderboardVgap + 30);
+        leaderboard.setHgap(leaderboardHgap + 90 * primaryScreenBounds.getHeight() / 1080);
+        leaderboard.setVgap(leaderboardVgap + 30 * primaryScreenBounds.getHeight() / 1080);
         leaderboard.setPadding(new Insets(gridPaddingX, gridPaddingU,
                 gridPaddingY, gridPaddingD));
         GridPane.setHalignment(leaderBoardLabel, HPos.LEFT);
@@ -710,7 +666,36 @@ public class BattleWars extends Application {
         stage.setResizable(false);
         stage.show();
     }
+    
+    /**
+     * used to set the paused parameter
+     */
+    public static void pause() {
+        paused = true;
+    }
 
+    /**
+     * used to resume the paused parameter
+     */
+    public static void resume() {
+        paused = false;
+    }
+
+    /**
+     * used to check if the game is paused
+     * 
+     * @return boolean
+     */
+    public static boolean isPaused() {
+        return paused;
+    }
+
+    
+
+    /**
+     * used to update the leaderboard components
+     * @param index
+     */
     public void updateLeaderboard(int index) {
         playerScores = sortPlayers();
         for (int j = 1+index; j < 6+index; j++) {
@@ -724,7 +709,7 @@ public class BattleWars extends Application {
                 boardScoreLabel[j-1-index].setTextFill(Color.WHITE);
                 boardScoreLabel[j-1-index].setScaleX(3 * primaryScreenBounds.getHeight() / 1080);
                 boardScoreLabel[j-1-index].setScaleY(3 * primaryScreenBounds.getHeight() / 1080);
-                boardNameLabel[j-1-index].setMinWidth(150);
+                boardNameLabel[j-1-index].setMinWidth(150 * primaryScreenBounds.getHeight() / 1080);
                 boardNameLabel[j-1-index].setEffect(new Glow(0.1));
                 boardScoreLabel[j-1-index].setEffect(new Glow(0.1));
             } catch (IndexOutOfBoundsException e) {
@@ -737,13 +722,16 @@ public class BattleWars extends Application {
                 boardScoreLabel[j-1-index].setTextFill(Color.WHITE);
                 boardScoreLabel[j-1-index].setScaleX(3 * primaryScreenBounds.getHeight() / 1080);
                 boardScoreLabel[j-1-index].setScaleY(3 * primaryScreenBounds.getHeight() / 1080);
-                boardNameLabel[j-1-index].setMinWidth(150);
+                boardNameLabel[j-1-index].setMinWidth(150 * primaryScreenBounds.getHeight() / 1080);
                 boardNameLabel[j-1-index].setEffect(new Glow(0.1));
                 boardScoreLabel[j-1-index].setEffect(new Glow(0.1));
             }
         }
     }
     
+    /**
+     * used to load the leader board
+     */
     public void loadLeaderboard(){
         playerScores = sortPlayers();
         for (int j = 1; j < 6; j++) {
@@ -755,7 +743,7 @@ public class BattleWars extends Application {
                 boardScoreLabel[j-1].setTextFill(Color.WHITE);
                 boardScoreLabel[j-1].setScaleX(3 * primaryScreenBounds.getHeight() / 1080);
                 boardScoreLabel[j-1].setScaleY(3 * primaryScreenBounds.getHeight() / 1080);
-                boardNameLabel[j-1].setMinWidth(150);
+                boardNameLabel[j-1].setMinWidth(150 * primaryScreenBounds.getHeight() / 1080);
                 boardNameLabel[j-1].setEffect(new Glow(0.1));
                 GridPane.setHalignment(boardNameLabel[j-1], HPos.LEFT);
                 leaderboard.add(boardNameLabel[j-1], 0, j + 1);
@@ -770,7 +758,7 @@ public class BattleWars extends Application {
                 boardScoreLabel[j-1].setTextFill(Color.WHITE);
                 boardScoreLabel[j-1].setScaleX(3 * primaryScreenBounds.getHeight() / 1080);
                 boardScoreLabel[j-1].setScaleY(3 * primaryScreenBounds.getHeight() / 1080);
-                boardNameLabel[j-1].setMinWidth(150);
+                boardNameLabel[j-1].setMinWidth(150 * primaryScreenBounds.getHeight() / 1080);
                 boardNameLabel[j-1].setEffect(new Glow(0.1));
                 GridPane.setHalignment(boardNameLabel[j-1], HPos.LEFT);
                 leaderboard.add(boardNameLabel[j-1], 0, j + 1);
@@ -781,6 +769,7 @@ public class BattleWars extends Application {
         }
     }
 
+    
     public static void main(String[] args) throws FileNotFoundException {
         players = Loader.load();
         name = players.get(0)[0];
@@ -816,6 +805,11 @@ public class BattleWars extends Application {
         Loader.save(players, name);
     }
 
+    /**
+     * main game loop
+     * 
+     * @param gc
+     */
     public void playRun(GraphicsContext gc) {
         if (player.isSpawning()) {
             player.updateCursor((int) getWidth() / 2, (int) getHeight() / 2);
@@ -850,6 +844,11 @@ public class BattleWars extends Application {
         }
     }
 
+    /**
+     * main menu loop
+     * 
+     * @param gc
+     */
     public static void mainRun(GraphicsContext gc) {
         //gc2.setFill(javafx.scene.paint.Color.RED);
         //gc2.fillPolygon(new double[]{player.xn, player.x1, player.xm},
@@ -876,11 +875,12 @@ public class BattleWars extends Application {
 
     }
 
+    /**
+     * pause menu loop
+     * 
+     * @param gc
+     */
     public static void pauseRun(GraphicsContext gc) {
-        //gc2.setFill(javafx.scene.paint.Color.RED);
-        //gc2.fillPolygon(new double[]{player.xn, player.x1, player.xm},
-        //new double[]{player.yn, player.y1, player.ym}, 3);
-        //player.update();
         gc.setEffect(new Glow(40));
         gc.setFill(Color.grayRgb(20));
         gc.fillRect(0, 0, width, height);
@@ -894,6 +894,11 @@ public class BattleWars extends Application {
 
     }
 
+    /**
+     * leader board menu loop
+     * 
+     * @param gc
+     */
     public static void leaderboardRun(GraphicsContext gc) {
         //gc2.setFill(javafx.scene.paint.Color.RED);
         //gc2.fillPolygon(new double[]{player.xn, player.x1, player.xm},
@@ -917,137 +922,107 @@ public class BattleWars extends Application {
         button3.paintComponent(gc);
 
     }
+    
+    
+    /**
+     * used to set the player score if the player has a new high score
+     * 
+     * @param player
+     * @param Score
+     */
+    public static void setScore(String player, int Score) {
+        for (int i = 1; i < players.size(); i++) {
+            if (players.size() > 1) {
+                if (players.get(i)[0].equals(player)) {
+                    if (Integer.valueOf(players.get(i)[1]) < Score) {
+                        players.get(i)[1] = String.valueOf(Score);
+                    }
+                }
+            }
+        }
+    }
 
+    /**
+     * used to sort the player in order of high score
+     * 
+     * @return ArrayList
+     */
+    public ArrayList<String[]> sortPlayers() {
+        ArrayList<String[]> plyers = players;
+        String[] temp = new String[2];
+        boolean sorting = true;
+        if (players.size() > 1) {
+            while (sorting) {
+                for (int i = 0; i < plyers.size() - 1; i++) {
+                    sorting = false;
+                    try {
+                        if (Integer.valueOf(plyers.get(i)[1]) < Integer.valueOf(plyers.get(i + 1)[1])) {
+                            temp = plyers.get(i);
+                            plyers.set(i, plyers.get(i + 1));
+                            plyers.set(i + 1, temp);
+                            sorting = true;
+                            break;
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+
+                    }
+                }
+            }
+        }
+        return plyers;
+    }
+
+    /**
+     * used to check if a player already exists
+     * 
+     * @param name
+     * @return boolean
+     */
+    public boolean playerExists(String name) {
+        for (String[] plyer : players) {
+            if (plyer[0].equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * used to subscribe an actor to receive updates from the renderer
+     * 
+     * @param actor
+     */
     public static void subscribe(Actor actor) {
         subscribers.add(actor);
     }
 
+    /**
+     * used to get all actors subscribed for updates
+     * 
+     * @return ArrayList
+     */
     public static ArrayList<Actor> getSubscribers() {
         return subscribers;
     }
 
+    /**
+     * used to get the width of the canvas
+     * 
+     * @return double
+     */
     public static double getWidth() {
         return canvas.getWidth();
     }
 
+    /**
+     * used to get the height of the canvas
+     * 
+     * @return double
+     */
     public static double getHeight() {
         return canvas.getHeight();
     }
-    //========================PLAYER START ============================
-
-    //========================Player stop =============================
-    static class MyButton extends Button implements Actor {
-
-        int corner1x, corner1y, corner2x, corner2y;
-        int c1, c2;
-        int[] Position;
-        int bWidth, bHeight, bwMax, bwMin, bhMax, bhMin;
-        int hMax, hMin, wMax, wMin;
-        GraphicsContext g;
-        boolean inflated;
-        boolean mouseOver;
-        String text = "", img;
-        int fontSize = 50;
-        Image image;
-        int xc, yc;
-
-        MyButton(String img, int c1, int c2, int bWidth, int bHeight) {
-            this.c1 = c1;
-            this.c2 = c2;
-            this.img = img;
-            hMax = c2 - (int) (0.2 * c2);
-            wMax = c1 - (int) (0.2 * c1);
-            this.bWidth = bWidth;
-            this.bHeight = bHeight;
-            bwMin = bWidth;
-            bwMax = bWidth + (int) (0.2 * bWidth);
-            bhMin = bHeight;
-            bhMax = bHeight + (int) (0.2 * bHeight);
-            corner1x = c1 - bWidth / 2;
-            corner1y = c2 - bHeight / 2;
-            corner2x = c1 + bWidth / 2;
-            corner2y = c2 + bHeight / 2;
-            hMin = corner1y;
-            wMin = corner1x;
-
-            image = new Image("file:\\\\\\" + System.getProperty("user.dir") + "/assets/" + img);
-        }
-
-        public void setName(String img) {
-            image = new Image("file:\\\\\\" + System.getProperty("user.dir") + "/assets/" + img);
-        }
-
-        @Override
-        public void update() {
-
-        }
-
-        public boolean mouseOver() {
-            return (xc >= wMin) && (xc <= wMin + bwMin)
-                    && (yc >= hMin) && (yc <= hMin + bhMin);
-        }
-
-        public void inflate() {
-
-            bWidth = bwMax;
-            bHeight = bhMax;
-            corner1x = c1 - bWidth / 2;
-            corner1y = c2 - bHeight / 2;
-            fontSize = 80;
-            inflated = true;
-
-        }
-
-        public void deflate() {
-            bWidth = bwMin;
-            bHeight = bhMin;
-            corner1x = c1 - bWidth / 2;
-            corner1y = c2 - bHeight / 2;
-            fontSize = 50;
-            inflated = false;
-        }
-
-        public boolean fullSize() {
-            return true;
-        }
-
-        @Override
-        public int[] getPosition() {
-            return new int[]{wMin, hMin + bHeight, wMin + bWidth, hMin + 2 * bHeight, bWidth, bHeight};
-        }
-
-        @Override
-        public String getName() {
-            return this.toString();
-        }
-
-        public void paintComponent(GraphicsContext g) {
-            this.g = g;
-            g.drawImage(image, corner1x, corner1y, bWidth, bHeight);
-        }
-
-        public void updateCursor(int xc, int yc) {
-            this.xc = xc;
-            this.yc = yc;
-        }
-
-        public int[] getCenter() {
-            return new int[]{c1, c2};
-        }
-
-        @Override
-        public boolean isDestroyed() {
-            return false;
-        }
-
-        @Override
-        public void destroy() {
-        }
-
-        @Override
-        public boolean isSpawning() {
-            return false;
-        }
-
-    }
+    
+    
 }

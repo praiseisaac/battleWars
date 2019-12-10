@@ -19,7 +19,8 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.stage.Screen;
 
 /**
- *
+ * This class is used to create a missile object 
+ * 
  * @author Praise Daramola praise24@uab.edu
  */
 public class Missile implements Actor {
@@ -66,6 +67,9 @@ public class Missile implements Actor {
         allMissiles.add(missile);
     }
 
+    /**
+     * this method is used to update all existing missiles
+     */
     public static void updateMissiles() {
         for (int i = 0; i < allMissiles.size(); i++) {
             try {
@@ -77,18 +81,13 @@ public class Missile implements Actor {
         }
     }
 
+    /**
+     * this method is used to get all missiles launched
+     * 
+     * @return ArrayList
+     */
     public static ArrayList<Missile> getMissiles() {
         return allMissiles;
-    }
-
-    public double[] startCoordinates() {
-        double[] cords = new double[4];
-        cords[0] = xn;
-        cords[1] = yn;
-        cords[3] = dx;
-        cords[4] = dy;
-
-        return cords;
     }
 
     @Override
@@ -96,6 +95,9 @@ public class Missile implements Actor {
         return ID;
     }
 
+    /**
+     * this method is used to update the missiles position and/or direction
+     */
     @Override
     public void update() {
         xnPrev = xn;
@@ -133,10 +135,20 @@ public class Missile implements Actor {
         System.out.println((int) abs(dy) + "  +-  " + (int) ynPrev + " = " + (int) yn);
     }
 
+    /**
+     * this method returns the position of the missile in x,y coordinates
+     * 
+     * @return int[]
+     */
     public int[] getPosition() {
         return new int[]{(int) xn, (int) yn};
     }
 
+    /**
+     * this method is used to check if the missile is destroyed
+     * 
+     * @return boolean
+     */
     public boolean isDestroyed() {
         int fHeight = (int) BattleWars.getHeight();
         int fWidth = (int) BattleWars.getWidth();
@@ -147,7 +159,12 @@ public class Missile implements Actor {
 
     }
 
-    public void hit(Boolean hit) {
+    /**
+     * used to determine if the missile has hit a target
+     * 
+     * @param hit
+     */
+    public void hit(boolean hit) {
         this.hit = hit;
     }
 
@@ -155,6 +172,16 @@ public class Missile implements Actor {
         id++;
     }
 
+    /**
+     * used to launch the missile
+     * 
+     * @param xc
+     * @param yc
+     * @param x1
+     * @param y1
+     * @param theta
+     * @param g
+     */
     public void launch(double xc, double yc, double x1, double y1, double theta, GraphicsContext g) {
         isDestroyed = false;
         this.g = g;
@@ -190,11 +217,19 @@ public class Missile implements Actor {
         System.out.println(dx + ", " + dy);
     }
 
+    /**
+     * used to get the ID of the missile
+     * 
+     * @return String
+     */
     @Override
     public String getName() {
         return ID;
     }
 
+    /**
+     * used to destroy the missile
+     */
     @Override
     public void destroy() {
         hit = false;
@@ -208,6 +243,12 @@ public class Missile implements Actor {
         y1 = 0;
     }
 
+    /**
+     * used to paint the missile
+     * 
+     * @param g
+     * @param destroy
+     */
     public static void paintComponent(GraphicsContext g, boolean destroy) {
         GraphicsContext g2d = g;
         if (destroy) {
@@ -242,12 +283,16 @@ public class Missile implements Actor {
 
         }
     }
-
     @Override
     public boolean isSpawning() {
         return false;
     }
 
+    /**
+     * used to render the missile
+     * 
+     * @param g
+     */
     @Override
     public void paintComponent(GraphicsContext g) {
 
@@ -260,6 +305,11 @@ public class Missile implements Actor {
         }
     }
 
+    /**
+     * used to get the height of the missile
+     * 
+     * @return double
+     */
     @Override
     public double getHeight() {
         return missileSize;

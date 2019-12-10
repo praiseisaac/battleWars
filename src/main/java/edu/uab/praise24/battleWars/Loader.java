@@ -26,7 +26,8 @@ public class Loader {
     /**
      *  This method is used to save history.
      * 
-     * @param calendar
+     * @param players
+     * @param name
      * @throws FileNotFoundException
      */
     public static void save(ArrayList<String[]> players, String name) throws FileNotFoundException {

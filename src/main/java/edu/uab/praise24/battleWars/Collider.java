@@ -32,6 +32,10 @@ public class Collider {
     static double R1, R2, R3;
     static double xn, yn, xo, yo, xm, ym, xc, yc, x1, y1;
     static Player player = Player.getInstance();
+
+    /**
+     * updates the collider to check for missile collision
+     */
     public static void update() {
         Missile.updateMissiles();
         int j;

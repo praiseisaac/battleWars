@@ -11,7 +11,8 @@ package edu.uab.praise24.battleWars;
 import javafx.scene.canvas.GraphicsContext;
 
 /**
- *
+ * Interface for actor objects
+ * 
  * @author Praise Daramola praise24@uab.edu
  */
 public interface Actor {

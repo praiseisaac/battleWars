@@ -18,7 +18,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 
 /**
- *
+ * This class is used to create a gun object
+ * 
  * @author Praise Daramola praise24@uab.edu
  */
 public class Gun {
@@ -32,7 +33,6 @@ public class Gun {
     boolean started;
     int timer = 0;
     int totalLaunched = 0;
-    Thread t;
     String name;
     static int id = 0;
     String missileName;
@@ -62,33 +62,21 @@ public class Gun {
         }
     }
 
+    /**
+     * used to get the gun capacity
+     * @return int
+     */
     public int getCapacity() {
         return missileCount;
     }
 
+    /**
+     * used to manually reload the gun
+     * 
+     * @param missile
+     * @throws InterruptedException
+     */
     public void addMissiles(Missile missile) throws InterruptedException {
-        t = new Thread("runner") {
-            @Override
-            public void run() {
-                while (true) {
-                    if (totalLaunched > 0) {
-                        started = true;
-                        while (timer < 10) {
-                            timer++;
-                            System.out.println("running" + timer);
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException ex) {
-                            }
-                        }
-
-                        totalLaunched = 0;
-                        timer = 0;
-                    }
-                }
-            }
-        };
-
         for (int missileC = 0; missileC < missileCount; missileC++) {
             if (missiles[missileC] == null) {
                 missiles[missileC] = (missile);
@@ -97,16 +85,24 @@ public class Gun {
             }
         }
         if (totalLaunched < missileCount) {
-            totalLaunched++;
+            totalLaunched--;
         }
-
-        System.out.println(totalLaunched);
     }
 
+    /**
+     * used to get the missiles in the gun
+     * 
+     * @return Missile[]
+     */
     public Missile[] getMissiles() {
         return missiles;
     }
 
+    /**
+     * used to update and paint the missiles launched from the gun
+     * 
+     * @param g
+     */
     public void shoot(GraphicsContext g) {
         centerX = (int) BattleWars.getWidth() - 60;
         centerY = (int) BattleWars.getHeight() - 60;
@@ -129,7 +125,18 @@ public class Gun {
         }
     }
 
-    public void shoot(double xc, double yc, double x1, double y1, double theta, GraphicsContext g) {
+    /**
+     * used to launch missiles from the gun
+     * 
+     * @param xc
+     * @param yc
+     * @param x1
+     * @param y1
+     * @param theta
+     * @param g
+     */
+    public void shoot(double xc, double yc, double x1, 
+            double y1, double theta, GraphicsContext g) {
         if (totalLaunched < missileCount && tick < missileCount * 100) {
             for (missileIter = totalLaunched; missileIter < missileCount; missileIter++) {
                 if (missiles[missileIter].isDestroyed()) {
@@ -147,6 +154,9 @@ public class Gun {
 
     }
 
+    /**
+     * used to reset the gun and missiles within the gun to their initial values
+     */
     public void reset() {
         for (int i = 0; i < missileCount; i++) {
             Missile missile = new Missile(missileName);
@@ -157,10 +167,19 @@ public class Gun {
         totalLaunched = 0;
     }
 
+    /**
+     * used to get the total number of missiles launched by the gun
+     * @return int
+     */
     public int getTotalLaunched() {
         return totalLaunched;
     }
 
+    /**
+     * used to check if the gun is full
+     * 
+     * @return boolean
+     */
     public boolean isFull() {
         for (int i = 0; i < missileCount; i++) {
             if (missiles[i] == null) {
@@ -170,10 +189,18 @@ public class Gun {
         return true;
     }
 
+    /**
+     * used to check if the gun is empty
+     * 
+     * @return boolean
+     */
     public boolean isEmpty() {
         return totalLaunched == missileCount;
     }
 
+    /**
+     * used to update the gun and missiles contained in the gun
+     */
     public void update() {
         for (missileIter = 0; missileIter < missileCount; missileIter++) {
             try { // 1

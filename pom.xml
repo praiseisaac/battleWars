@@ -9,7 +9,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
     <moduleName>${project.groupId}.${project.artifactId}</moduleName>
-        <mainClass>${project.groupId}.${project.artifactId}.App</mainClass>
+        <mainClass>${project.groupId}.${project.artifactId}.BattleWars</mainClass>
     </properties>
     <dependencies>
         <dependency>

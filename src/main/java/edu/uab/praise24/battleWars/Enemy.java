@@ -16,7 +16,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 
 /**
- *
+ * This class is used to create an enemy object 
+ * implements actor
+ * 
  * @author Praise Daramola praise24@uab.edu
  */
 public class Enemy implements Actor {
@@ -54,6 +56,9 @@ public class Enemy implements Actor {
     Missile msl;
     Random rand = new Random();
 
+    /**
+     * initializes an enemy object
+     */
     public Enemy() {
         name = "Enemy Player" + String.valueOf(ID);
         temps[0] = tempX1;
@@ -66,11 +71,21 @@ public class Enemy implements Actor {
         ID++;
     }
     
+    /**
+     * used to get the height of the enemy
+     * 
+     * @return double
+     */
     @Override
     public double getHeight(){
         return tHeight;
     }
 
+    /**
+     * used to get the name of the enemy object
+     * 
+     * @return String
+     */
     @Override
     public String getName() {
         return name;
@@ -81,6 +96,9 @@ public class Enemy implements Actor {
         return name;
     }
 
+    /**
+     * used to update the enemy object
+     */
     @Override
     public void update() {
         if (wait >= 300) {
@@ -97,11 +115,19 @@ public class Enemy implements Actor {
 
     }
 
+    /**
+     * used to check if the enemy object is spawning
+     * 
+     * @return boolean
+     */
     @Override
     public boolean isSpawning() {
         return wait < 300;
     }
 
+    /**
+     * used to spawn an enemy
+     */
     public void spawn() {
         tickCount = rand.nextInt(150) + 400;
         tick = 0;
@@ -189,6 +215,9 @@ public class Enemy implements Actor {
         System.out.println("Enemy Spawned");
     }
 
+    /**
+     * used ti aim
+     */
     public void aim() {
         if (!BattleWars.isPaused()) {
             xc = player.getPosition()[0];
@@ -259,11 +288,20 @@ public class Enemy implements Actor {
 
     }
 
+    /**
+     * used to set the current direction in which the actor is moving
+     * 
+     * @param value
+     * @param direction
+     */
     public void moving(boolean value, String direction) {
         this.moving = value;
         this.direction = direction;
     }
 
+    /**
+     * used to move the actor 
+     */
     public void moveForward() {
 
         if (!BattleWars.isPaused()) {
@@ -333,6 +371,11 @@ public class Enemy implements Actor {
 
     }
 
+    /**
+     * used to render the actor
+     * 
+     * @param g
+     */
     @Override
     public void paintComponent(GraphicsContext g) {
         if (wait >= 300 && !BattleWars.isPaused()) {
@@ -367,28 +410,38 @@ public class Enemy implements Actor {
         }
     }
 
-    public boolean isCollided() {
-        int i = 0;
-
-        return false;
-    }
-
+    /**
+     * Used to check is the actor has been destroyed
+     * 
+     * @return boolean
+     */
     @Override
     public boolean isDestroyed() {
         return isDestroyed;
     }
 
+    /**
+     * used to launch a missile
+     */
     public void launchMissile() {
         aim();
 
         gun.shoot(x1, y1, xo, yo, theta, g);
     }
 
+    /**
+     * used to get the position of an actor
+     * 
+     * @return int[]
+     */
     @Override
     public int[] getPosition() {
         return new int[]{(int) x1, (int) y1, (int) xc, (int) yc, (int) xn, (int) yn, (int) xm, (int) ym};
     }
 
+    /**
+     * used to destroy the actor
+     */
     @Override
     public void destroy() {
         spawn();
@@ -396,6 +449,9 @@ public class Enemy implements Actor {
         isDestroyed = false;
     }
 
+    /**
+     * used to kill the actor
+     */
     public void kill() {
         wait = 0;
         temps[0] = tempX1;
