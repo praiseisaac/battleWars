@@ -2,14 +2,9 @@
  * File: Gun.java
  * Author: Praise Daramola praise24@uab.edu
  * Assignment:  AimnDodge - EE333 Fall 2019
+ * Vers: 1.1.0 12/10/2019 PAD - Final debug for submission
  * Vers: 1.0.0 10/15/2019 P.D - initial coding
  *
- * Credits:  (if any for sections of code)
- */
- /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package edu.uab.praise24.battleWars;
 
@@ -17,19 +12,22 @@ import java.awt.Graphics2D;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.toRadians;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
 
 /**
  *
  * @author Praise Daramola praise24@uab.edu
  */
-public class Gun implements Actor {
+public class Gun {
 
     Missile missile;
-    int missileCount = 7, missileIndex = 0;
+    int missileCount = 7, missileIndex = 0, missileSize = 10, radius = 30;
     Missile[] missiles = new Missile[missileCount];
     static int missileIter = 0;
+    
     double[][] reload;
     boolean started;
     int timer = 0;
@@ -47,20 +45,21 @@ public class Gun implements Actor {
         reload = new double[missileCount][2];
         theta = 360 / missileCount;
         id++;
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        missileSize = (int)(primaryScreenBounds.getHeight() * missileSize / 1080);
+        radius = (int)(primaryScreenBounds.getHeight() * radius / 1080);
         for (int i = 0; i < missileCount; i++) {
             missileName = String.valueOf(name) + " missile " + String.valueOf(missileIndex);
-            Missile missile = new Missile(missileName);
+            missile = new Missile(missileName);
             missiles[i] = missile;
             missileIndex++;
         }
 
         for (int i = 0; i < missileCount; i++) {
-            reload[i][0] = 30 * sin(toRadians(thetaVal));
-            reload[i][1] = 30 * cos(toRadians(thetaVal));
+            reload[i][0] = radius * sin(toRadians(thetaVal));
+            reload[i][1] = radius * cos(toRadians(thetaVal));
             thetaVal += theta;
         }
-
-        //renderer.subscribe(this);
     }
 
     public int getCapacity() {
@@ -101,9 +100,6 @@ public class Gun implements Actor {
             totalLaunched++;
         }
 
-        /*if (started == false || timer == 0) {
-            t.start();
-        }*/
         System.out.println(totalLaunched);
     }
 
@@ -112,16 +108,16 @@ public class Gun implements Actor {
     }
 
     public void shoot(GraphicsContext g) {
-        centerX = (int) App.getWidth() - 60;
-        centerY = (int) App.getHeight() - 60;
+        centerX = (int) BattleWars.getWidth() - 60;
+        centerY = (int) BattleWars.getHeight() - 60;
         if (name.contains("Main")) {
             for (int i = 0; i < missileCount; i++) {
                 if (i >= totalLaunched) {
                     g.setFill(Color.GREEN);
-                    g.fillOval(centerX + reload[i][0], centerY + reload[i][1], 10, 10);
+                    g.fillOval(centerX + reload[i][0], centerY + reload[i][1], missileSize, missileSize);
                 } else {
                     g.setFill(Color.RED);
-                    g.fillOval(centerX + reload[i][0], centerY + reload[i][1], 10, 10);
+                    g.fillOval(centerX + reload[i][0], centerY + reload[i][1], missileSize, missileSize);
                 }
             }
         }
@@ -137,7 +133,6 @@ public class Gun implements Actor {
         if (totalLaunched < missileCount && tick < missileCount * 100) {
             for (missileIter = totalLaunched; missileIter < missileCount; missileIter++) {
                 if (missiles[missileIter].isDestroyed()) {
-                    //System.out.println(xc + " + " + yc + "::::" + x1 + " + " + y1);
                     missiles[missileIter].launch(xc, yc, x1, y1, theta, g);
                     totalLaunched++;
                     break;
@@ -154,7 +149,6 @@ public class Gun implements Actor {
 
     public void reset() {
         for (int i = 0; i < missileCount; i++) {
-            //missileName = String.valueOf(name) + " missile " + String.valueOf(missileIndex);
             Missile missile = new Missile(missileName);
             missiles[i] = missile;
             missileIndex++;
@@ -180,16 +174,13 @@ public class Gun implements Actor {
         return totalLaunched == missileCount;
     }
 
-    @Override
     public void update() {
         for (missileIter = 0; missileIter < missileCount; missileIter++) {
             try { // 1
                 if (missiles[missileIter] != null) {
                     missiles[missileIter].update();
-                    //System.out.println("mmmmm = " + missiles[missileIter]);
                 }
                 if (missiles[missileIter].isDestroyed()) {
-                    //System.out.println("nahhhhh = " + missiles[missileIter]);
 
                     missiles[missileIter] = null;
                 }
@@ -199,32 +190,4 @@ public class Gun implements Actor {
         }
     }
 
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void paintComponent(GraphicsContext g) {
-
-    }
-
-    @Override
-    public int[] getPosition() {
-        return null;
-    }
-
-    @Override
-    public boolean isDestroyed() {
-        return false;
-    }
-
-    @Override
-    public void destroy() {
-    }
-
-    @Override
-    public boolean isSpawning() {
-        return false;
-    }
 }

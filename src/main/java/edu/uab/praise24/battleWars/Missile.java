@@ -2,33 +2,21 @@
  * File: Missile.java
  * Author: Praise Daramola praise24@uab.edu
  * Assignment:  AimnDodge - EE333 Fall 2019
+ * Vers: 1.1.0 12/10/2019 PAD - Final debug for submission
  * Vers: 1.0.0 10/13/2019 PAD - initial coding
  *
- * Credits:  (if any for sections of code)
- */
- /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package edu.uab.praise24.battleWars;
 
-import javax.swing.JPanel;
 import javafx.scene.paint.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import static java.lang.Math.abs;
-import static java.lang.Math.atan;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-import static java.lang.Math.toDegrees;
 import static java.lang.Math.toRadians;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
-//import javax.swing.JComponent;
+import javafx.stage.Screen;
 
 /**
  *
@@ -44,12 +32,10 @@ public class Missile implements Actor {
     static ArrayList<Missile> allMissiles = new ArrayList<>();
     boolean hit = false;
     static int id = 0;
-    private static Player player = Player.getInstance();
     String ID;
-    private static int missileID = 0;
     Thread t;
     boolean start = true;
-    int missileSize = 0;
+    int missileSize = 0, maxMissileSize = 10;
     Missile missile;
     int missileCount = 7, missileIndex = 0;
     static int missileIter = 0;
@@ -68,11 +54,12 @@ public class Missile implements Actor {
         ID = id + " missile";
         name = ID;
         this.id++;
-        missileID++;
         addMissile(this);
-        
 
-        
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        maxMissileSize = (int) primaryScreenBounds.getHeight() * maxMissileSize / 1080;
+        velocity = primaryScreenBounds.getHeight() * velocity / 1080;
+
     }
 
     private void addMissile(Missile missile) {
@@ -109,10 +96,8 @@ public class Missile implements Actor {
         return ID;
     }
 
-    // ==========NEEDS REVISION FOR JAVAFX
     @Override
     public void update() {
-        //System.out.println(xn + "," + yn + "[]" + xc + "," + yc);
         xnPrev = xn;
         ynPrev = yn;
         if (xc > x1 && yc < y1) {
@@ -122,20 +107,14 @@ public class Missile implements Actor {
         if (xc > x1 && yc > y1) {
             yn = (yn + dy);
             xn = (xn + dx);
-            //update.run();
-            //System.out.println(dx + "," + dy);
         }
         if (xc < x1 && yc > y1) {
             yn = (yn + dy);
             xn = (xn - dx);
-            //update.run();
-            //System.out.println(dx + "," + dy);
         }
         if (xc < x1 && yc < y1) {
             yn = (yn - dy);
             xn = (xn - dx);
-            //update.run();
-            //System.out.println(dx + "," + dy);
         }
         if ((abs(yc - y1) > 0) && (int) xc - x1 == 0) {
             if (yc > y1) {
@@ -152,7 +131,6 @@ public class Missile implements Actor {
         }
 
         System.out.println((int) abs(dy) + "  +-  " + (int) ynPrev + " = " + (int) yn);
-        //System.out.println(xnPrev + "," + ynPrev + "[]" + xn + "," + yn);
     }
 
     public int[] getPosition() {
@@ -160,10 +138,8 @@ public class Missile implements Actor {
     }
 
     public boolean isDestroyed() {
-        //System.out.println("ahhhhhhhhhhhhhh");
-        int fHeight = (int) App.getHeight();
-        int fWidth = (int) App.getWidth();
-        //System.out.println(xn + "," + yn + "[]" + frame.getBounds().width + "," + frame.getBounds().height);
+        int fHeight = (int) BattleWars.getHeight();
+        int fWidth = (int) BattleWars.getWidth();
         return (xn >= fWidth)
                 || (yn >= fHeight)
                 || (yn <= 0)
@@ -176,7 +152,6 @@ public class Missile implements Actor {
     }
 
     void spawn() {
-        //missileID = String.valueOf(id);
         id++;
     }
 
@@ -187,9 +162,8 @@ public class Missile implements Actor {
         yn = yc;
         this.xc = xc;
         this.yc = yc;
-        missileSize = 10;
+        missileSize = maxMissileSize;
         System.out.println((int) xc + "," + (int) yc + "  :::  " + (int) x1 + "," + (int) y1 + "==>" + (int) theta);
-        //frame.getContentPane().add(this);
         start = false;
         if (xc > x1 && yc < y1) {
             dy = -velocity * sin(toRadians(theta));
@@ -235,7 +209,6 @@ public class Missile implements Actor {
     }
 
     public static void paintComponent(GraphicsContext g, boolean destroy) {
-        //super.paintComponent(g);
         GraphicsContext g2d = g;
         if (destroy) {
             for (int i = 0; i < allMissiles.size(); i++) {
@@ -260,7 +233,7 @@ public class Missile implements Actor {
                         allMissiles.get(i).update();
                         allMissiles.get(i).paintComponent(g);
                     } else {
-                        
+
                     }
 
                 } catch (NullPointerException | ArrayIndexOutOfBoundsException ex) {
@@ -268,12 +241,6 @@ public class Missile implements Actor {
             }
 
         }
-    }
-
-    public void paintComponent(Graphics2D g) {
-
-        //
-        //}
     }
 
     @Override
@@ -284,7 +251,6 @@ public class Missile implements Actor {
     @Override
     public void paintComponent(GraphicsContext g) {
 
-        
         if (name.contains("Main")) {
             g.setFill(Color.GREEN);
             g.fillOval(xn, yn, missileSize, missileSize);
@@ -292,6 +258,11 @@ public class Missile implements Actor {
             g.setFill(Color.YELLOWGREEN);
             g.fillOval(xn, yn, missileSize, missileSize);
         }
+    }
+
+    @Override
+    public double getHeight() {
+        return missileSize;
     }
 
 }

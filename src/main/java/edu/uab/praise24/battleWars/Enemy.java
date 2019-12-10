@@ -2,28 +2,14 @@
  * File: Enemy.java
  * Author: Praise Daramola praise24@uab.edu
  * Assignment:  AimnDodge - EE333 Fall 2019
+ * Vers: 1.1.0 12/10/2019 PAD - Final debug for submission
  * Vers: 1.0.0 11/29/2019 PAD - initial coding
  *
- * Credits:  (if any for sections of code)
- */
- /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package edu.uab.praise24.battleWars;
 
-//import static edu.uab.prause24.demo.Play.renderer;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.MouseInfo;
-import java.awt.Point;
-import java.awt.RenderingHints;
-import javax.swing.JPanel;
 import static java.lang.Math.*;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -34,7 +20,6 @@ import javafx.stage.Screen;
  * @author Praise Daramola praise24@uab.edu
  */
 public class Enemy implements Actor {
-
     private static Player player = Player.getInstance();
     boolean started = false;
     int timer = 0;
@@ -80,6 +65,11 @@ public class Enemy implements Actor {
         velocity = primaryScreenBounds.getHeight() * velocity / 1080;
         ID++;
     }
+    
+    @Override
+    public double getHeight(){
+        return tHeight;
+    }
 
     @Override
     public String getName() {
@@ -93,8 +83,6 @@ public class Enemy implements Actor {
 
     @Override
     public void update() {
-        //missile.update();
-        //System.out.println("===============aiming===============");
         if (wait >= 300) {
             moveForward();
         }
@@ -125,13 +113,12 @@ public class Enemy implements Actor {
         tempX1 = 1;
         tempX1 = 2;
         Random rand = new Random();
-        y1 = rand.nextInt((int) App.getHeight());
-        x1 = rand.nextInt((int) App.getWidth());
+        y1 = rand.nextInt((int) BattleWars.getHeight());
+        x1 = rand.nextInt((int) BattleWars.getWidth());
 
         rand = null;
 
         k = (int) (tHeight * tan(toRadians(30)));
-        //System.out.println(x1 + "," + y1 + "," + xc + "," + yc);
         if (yc > 0 && xc > 0) {
             if (xc > x1 && yc < y1) {
                 theta = toDegrees(atan((double) abs((yc - y1) / (xc - x1))));
@@ -199,17 +186,11 @@ public class Enemy implements Actor {
 
             }
         }
-        //xn = 300;
-        //yn = 200;
-        //xm = 100;
-        //ym = 200;
-        //System.out.println((int) xn + "," +(int) x1 + "," + (int) xm + "," + (int) yn+ "," + (int) y1+ "," + (int) ym);
-
         System.out.println("Enemy Spawned");
     }
 
     public void aim() {
-        if (!App.isPaused()) {
+        if (!BattleWars.isPaused()) {
             xc = player.getPosition()[0];
             yc = player.getPosition()[1];
             k = (int) (tHeight * tan(toRadians(30)));
@@ -225,7 +206,6 @@ public class Enemy implements Actor {
                 yn = (yo - k * sin(toRadians(phi)));
                 xm = (xo + k * cos(toRadians(phi)));
                 ym = (yo + k * sin(toRadians(phi)));
-                //System.out.println(xn + "," + yn);
             }
             if (xc > x1 && yc > y1) {
                 theta = toDegrees(atan((double) abs((xc - x1) / (yc - y1))));
@@ -238,7 +218,6 @@ public class Enemy implements Actor {
                 yn = (yo - k * cos(toRadians(phi)));
                 xm = (xo - k * sin(toRadians(phi)));
                 ym = (yo + k * cos(toRadians(phi)));
-                //System.out.println(xn + "," + yn + " == " + yc + "," + xc);
             }
             if (xc < x1 && yc > y1) {
                 theta = toDegrees(atan((double) abs((yc - y1) / (xc - x1))));
@@ -251,7 +230,6 @@ public class Enemy implements Actor {
                 yn = (yo + k * sin(toRadians(phi)));
                 xm = (xo - k * cos(toRadians(phi)));
                 ym = (yo - k * sin(toRadians(phi)));
-                //System.out.println(xn + "," + yn + " == " + yc + "," + xc);
             }
             if (xc < x1 && yc < y1) {
                 theta = toDegrees(atan((double) abs((xc - x1) / (yc - y1))));
@@ -264,7 +242,6 @@ public class Enemy implements Actor {
                 yn = (yo + k * cos(toRadians(phi)));
                 xm = (xo + k * sin(toRadians(phi)));
                 ym = (yo - k * cos(toRadians(phi)));
-                //System.out.println(xn + "," + yn + " == " + yc + "," + xc);
             }
             if ((yc - y1 > 0) && (int) xc - x1 == 0) {
                 theta = toDegrees(atan((double) abs((yc - y1) / (xc - x1))));
@@ -288,13 +265,10 @@ public class Enemy implements Actor {
     }
 
     public void moveForward() {
-        //Point p = MouseInfo.getPointerInfo().getLocation();
 
-        if (!App.isPaused()) {
+        if (!BattleWars.isPaused()) {
             xc = player.getPosition()[0];
             yc = player.getPosition()[1];
-            //System.out.println(velocity);
-            //System.out.println("velocity = " + velocity);
             if (sqrt(pow(yc - y1, 2) + pow(xc - x1, 2)) > 0) {
                 if (xc > x1 && yc < y1) {//Q1
 
@@ -359,12 +333,9 @@ public class Enemy implements Actor {
 
     }
 
-    // ====================NEEDS REVISION FOR JFX
     @Override
     public void paintComponent(GraphicsContext g) {
-        //super.paintComponent(g);
-
-        if (wait >= 300 && !App.isPaused()) {
+        if (wait >= 300 && !BattleWars.isPaused()) {
             GraphicsContext g2d = g;
             g2d.setFill(Color.YELLOW);
             g2d.fillPolygon(new double[]{xn, x1, xm}, new double[]{yn, y1, ym}, 3);
@@ -394,8 +365,6 @@ public class Enemy implements Actor {
             }
             wait++;
         }
-//System.out.println((int) xn + "," +(int) x1 + "," + (int) xm + "," + (int) yn+ "," + (int) y1+ "," + (int) ym);
-        //missile.repaint();
     }
 
     public boolean isCollided() {
@@ -423,7 +392,6 @@ public class Enemy implements Actor {
     @Override
     public void destroy() {
         spawn();
-        //gun.reset();
         wait = 0;
         isDestroyed = false;
     }

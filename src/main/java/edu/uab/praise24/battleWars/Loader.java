@@ -29,7 +29,7 @@ public class Loader {
      * @param calendar
      * @throws FileNotFoundException
      */
-    public static void save(ArrayList<String[]> players) throws FileNotFoundException {
+    public static void save(ArrayList<String[]> players, String name) throws FileNotFoundException {
         // saves the files to a folder called history
         File filename;
 
@@ -37,8 +37,13 @@ public class Loader {
         filename = new File(System.getProperty("user.dir") + "/History/highScore.txt");
         filename.getParentFile().mkdirs();
         PrintStream writer = new PrintStream(new FileOutputStream(filename));
+        writer.println(name);
         for (String[] player : players){
-            writer.println(player[0] + ":" + player[1]);
+            try {
+                writer.println(player[0] + ":" + player[1]);
+            } catch (IndexOutOfBoundsException e){
+                
+            }
         }
         writer.close();
     }
@@ -67,6 +72,7 @@ public class Loader {
         try {
             filename = new File(System.getProperty("user.dir") + "\\History\\highScore.txt");
             file = new Scanner(filename,"utf-8");
+            players.add(file.nextLine().split(":",2));
             while (file.hasNextLine()) {
                 fname = file.nextLine();
                 players.add(fname.split(":",2));

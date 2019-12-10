@@ -4,12 +4,6 @@
  * Assignment:  Demo - EE333 Fall 2019
  * Vers: 1.0.0 10/12/2019 PAD - initial coding
  *
- * Credits:  (if any for sections of code)
- */
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package edu.uab.praise24.battleWars;
 
@@ -28,4 +22,5 @@ public interface Actor {
     public boolean isDestroyed();
     public void destroy();
     public boolean isSpawning();
+    public double getHeight();
 }

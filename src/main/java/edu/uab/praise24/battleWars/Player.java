@@ -2,22 +2,15 @@
  * File: Player.java
  * Author: Praise Daramola praise24@uab.edu
  * Assignment:  battleWars - EE333 Fall 2019
+ * Vers: 1.1.0 12/10/2019 PAD - Final debug for submission
  * Vers: 1.0.0 12/07/2019 PAD - initial coding
  *
- * Credits:  (if any for sections of code)
- */
- /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
  */
 package edu.uab.praise24.battleWars;
 
-import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import static java.lang.Math.*;
-import java.util.Random;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.Glow;
@@ -29,8 +22,6 @@ import javafx.stage.Screen;
  * @author Praise Daramola praise24@uab.edu
  */
 public class Player implements Actor {
-
-    //private final Renderer renderer = Renderer.getInstance();
     boolean started = false;
     int timer = 0;
     double r1, r2, r3;
@@ -82,10 +73,14 @@ public class Player implements Actor {
         tHeight = primaryScreenBounds.getHeight() * tHeight / 1080;
         velocity = primaryScreenBounds.getHeight() * velocity / 1080;
     }
+    
+    @Override
+    public double getHeight(){
+        return tHeight;
+    }
 
     @Override
     public void destroy() {
-        System.out.println("============Player Hit===========");
         isDestroyed = true;
     }
 
@@ -103,13 +98,13 @@ public class Player implements Actor {
     public void update() {
         //missile.update();
 
-        /*if (!App.isWidthChanged()) {
+        /*if (!BattleWars.isWidthChanged()) {
                 tHeight = frame.getBounds().height / 12;
                 vMax = frame.getBounds().height / 120;
                 //aim();
                 //System.out.println(x1 + "," + y1);
-                //x1 = (x1 * frame.getBounds().width) / App.oldWidth;
-                //y1 = (y1 * frame.getBounds().width) / App.oldWidth;
+                //x1 = (x1 * frame.getBounds().width) / BattleWars.oldWidth;
+                //y1 = (y1 * frame.getBounds().width) / BattleWars.oldWidth;
             }*/
         //System.out.println(xc + " + " + yc + "::::" + x1 + " + " + y1);
         if (monitorMouse() == true || xo != xo2) {
@@ -243,8 +238,8 @@ public class Player implements Actor {
         glow = new Glow();
         glow.setLevel(40);
         isDestroyed = false;
-        //x1 = App.getWidth() / 2;
-        //y1 = App.getHeight() / 2;
+        //x1 = BattleWars.getWidth() / 2;
+        //y1 = BattleWars.getHeight() / 2;
         R = 50 / sin(toRadians(60));
         if (yc > 0 && xc > 0) {
             if (xc > x1 && yc < y1) {
@@ -408,14 +403,14 @@ public class Player implements Actor {
     }
 
     public void moveRight(double dx) {
-        if (x1 <= App.getWidth()-tHeight/2) {
+        if (x1 <= BattleWars.getWidth()-tHeight/2) {
             //System.out.println("moving => 1");
             if (sqrt(pow(yc - y1, 2) + pow(xc - x1, 2)) > 10) {
                 //System.out.println("moving");
                 x1 = x1 + dx;
             }
-        } else if (x1 >= App.getWidth()-tHeight/2) {
-            x1 = App.getWidth()-tHeight/2;
+        } else if (x1 >= BattleWars.getWidth()-tHeight/2) {
+            x1 = BattleWars.getWidth()-tHeight/2;
         } 
     }
 
@@ -449,14 +444,14 @@ public class Player implements Actor {
     }
 
     public void moveBackward(double dy) {
-        if (y1 <= App.getHeight()-tHeight/2) {
+        if (y1 <= BattleWars.getHeight()-tHeight/2) {
             //System.out.println("moving => 1");
             if (sqrt(pow(yc - y1, 2) + pow(xc - x1, 2)) > 10) {
                 //System.out.println("moving");
                 y1 = y1 + dy;
             }
-        } else if (y1 > App.getHeight()-tHeight/2) {
-            y1 = App.getHeight()-tHeight/2;
+        } else if (y1 > BattleWars.getHeight()-tHeight/2) {
+            y1 = BattleWars.getHeight()-tHeight/2;
         } 
     }
 
@@ -473,7 +468,7 @@ public class Player implements Actor {
         gc.setFill(Color.RED);
         gc.setEffect(glow);
         gc.fillPolygon(new double[]{xn, x1, xm}, new double[]{yn, y1, ym}, 3);
-        if (!App.isPaused()){
+        if (!BattleWars.isPaused()){
             gun.shoot(gc);
         }
         
