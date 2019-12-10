@@ -138,15 +138,16 @@ public class BattleWars extends Application {
         buttonHeight = (int) (buttonHeight * (primaryScreenBounds.getHeight() / 1080));
 
         // arrow buttons
+        W = 800;
         arrowSize = (int) (arrowSize * primaryScreenBounds.getHeight() / 1080);
-        upperArrowCenterY = (int) (canvas.getHeight() / 2
-                - arrowDist * (primaryScreenBounds.getHeight() / 1080));
-        upperArrowCenterX = (int) (canvas.getWidth() / 2
-                + upperArrowCenterX * primaryScreenBounds.getWidth() / 1920);
-        bottomArrowCenterY = (int) (canvas.getHeight() / 2
-                + arrowDist * (primaryScreenBounds.getHeight() / 1080));
-        bottomArrowCenterX = (int) (canvas.getWidth() / 2
-                + bottomArrowCenterX * primaryScreenBounds.getWidth() / 1920);
+        upperArrowCenterY = (int) ((canvas.getHeight() / 2
+                - arrowDist * (primaryScreenBounds.getHeight() / 1080))
+                * primaryScreenBounds.getHeight() / 1080);
+        upperArrowCenterX = (int) (W * primaryScreenBounds.getWidth() / 1920);
+        bottomArrowCenterY = (int) ((canvas.getHeight() / 2
+                + arrowDist * (primaryScreenBounds.getHeight() / 1080))
+                * primaryScreenBounds.getHeight() / 1080);
+        bottomArrowCenterX = (int) (W * primaryScreenBounds.getWidth() / 1920);
 
         // leaderboard
         leadLayout = (int) (leadLayout * primaryScreenBounds.getWidth() / 1920);

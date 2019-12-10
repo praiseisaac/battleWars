@@ -326,7 +326,6 @@ public class Player implements Actor {
                 ym = yo;
             }
         }
-        System.out.println("player Spawned");
     }
 
     /**
