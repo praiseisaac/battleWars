@@ -8,4 +8,4 @@ Requirements:
 Javafx?? incase the image did not link the javafx modules and if you intend to run the code from an IDE/a text editor.
 JVM, JDK, and JRE if you intend to work with code files.
 
-In summary, the goal of the game is to not get killed bu the enemies bullets, WASD controls, and left (any really) mouse buton to shoot. Goog luck, its an easy game. happy modding.
+In summary, the goal of the game is to not get killed but the enemies bullets, WASD controls, and left (any really) mouse buton to shoot. Goog luck, its an easy game. happy modding.
